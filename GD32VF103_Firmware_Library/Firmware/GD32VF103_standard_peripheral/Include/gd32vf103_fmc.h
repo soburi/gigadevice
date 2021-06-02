@@ -1,13 +1,15 @@
 /*!
-    \file  gd32vf103_fmc.h
-    \brief definitions for the FMC
+    \file    gd32vf103_fmc.h
+    \brief   definitions for the FMC
 
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2019-09-18, V1.0.1, firmware for GD32VF103
+    \version 2020-02-20, V1.0.2, firmware for GD32VF103
+    \version 2020-08-04, V1.1.0, firmware for GD32VF103
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -135,26 +137,25 @@ typedef enum
 /* FMC interrupt enable */
 typedef enum
 {
-    FMC_INT_END     = FMC_REGIDX_BIT(FMC_CTL_REG_OFFSET, 12U),            /*!< enable FMC end of program interrupt */
-    FMC_INT_ERR     = FMC_REGIDX_BIT(FMC_CTL_REG_OFFSET, 10U),            /*!< enable FMC error interrupt */
+    FMC_INT_END     = FMC_CTL_ENDIE,                              /*!< enable FMC end of program interrupt */
+    FMC_INT_ERR     = FMC_CTL_ERRIE,                              /*!< enable FMC error interrupt */
 }fmc_int_enum;
 
 /* FMC flags */
 typedef enum
 {
-    FMC_FLAG_BUSY   = FMC_REGIDX_BIT(FMC_STAT_REG_OFFSET, 0U),                  /*!< FMC busy flag */
-    FMC_FLAG_PGERR  = FMC_REGIDX_BIT(FMC_STAT_REG_OFFSET, 2U),                  /*!< FMC operation error flag bit */
-    FMC_FLAG_WPERR  = FMC_REGIDX_BIT(FMC_STAT_REG_OFFSET, 4U),                  /*!< FMC erase/program protection error flag bit */
-    FMC_FLAG_END    = FMC_REGIDX_BIT(FMC_STAT_REG_OFFSET, 5U),                  /*!< FMC end of operation flag bit */
-    FMC_FLAG_OBERR  = FMC_REGIDX_BIT(FMC_OBSTAT_REG_OFFSET, 0U),                /*!< FMC option bytes read error flag */
+    FMC_FLAG_BUSY   = FMC_STAT_BUSY,                              /*!< FMC busy flag */
+    FMC_FLAG_PGERR  = FMC_STAT_PGERR,                             /*!< FMC operation error flag */
+    FMC_FLAG_WPERR  = FMC_STAT_WPERR,                             /*!< FMC erase/program protection error flag */
+    FMC_FLAG_END    = FMC_STAT_ENDF,                              /*!< FMC end of operation flag */
 }fmc_flag_enum;
 
 /* FMC interrupt flags */
 typedef enum
 {
-    FMC_INT_FLAG_PGERR  = FMC_REGIDX_BITS(FMC_STAT_REG_OFFSET, 2U, 10U),  /*!< FMC operation error interrupt flag bit */
-    FMC_INT_FLAG_WPERR  = FMC_REGIDX_BITS(FMC_STAT_REG_OFFSET, 4U, 10U),  /*!< FMC erase/program protection error interrupt flag bit */
-    FMC_INT_FLAG_END    = FMC_REGIDX_BITS(FMC_STAT_REG_OFFSET, 5U, 12U),  /*!< FMC end of operation interrupt flag bit */
+    FMC_INT_FLAG_PGERR  = FMC_STAT_PGERR,                         /*!< FMC operation error interrupt flag */
+    FMC_INT_FLAG_WPERR  = FMC_STAT_WPERR,                         /*!< FMC erase/program protection error interrupt flag */
+    FMC_INT_FLAG_END    = FMC_STAT_ENDF,                          /*!< FMC end of operation interrupt flag */
 }fmc_interrupt_flag_enum;
 
 /* unlock key */
@@ -293,13 +294,13 @@ FlagStatus ob_spc_get(void);
 
 /* FMC interrupts and flags management functions */
 /* enable FMC interrupt */
-void fmc_interrupt_enable(uint32_t interrupt);
+void fmc_interrupt_enable(fmc_int_enum interrupt);
 /* disable FMC interrupt */
-void fmc_interrupt_disable(uint32_t interrupt);
+void fmc_interrupt_disable(fmc_int_enum interrupt);
 /* check flag is set or not */
-FlagStatus fmc_flag_get(uint32_t flag);
+FlagStatus fmc_flag_get(fmc_flag_enum flag);
 /* clear the FMC flag */
-void fmc_flag_clear(uint32_t flag);
+void fmc_flag_clear(fmc_flag_enum flag);
 /* get FMC interrupt flag state */
 FlagStatus fmc_interrupt_flag_get(fmc_interrupt_flag_enum flag);
 /* clear FMC interrupt flag state */

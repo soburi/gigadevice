@@ -1,4 +1,4 @@
-// See LICENSE for license details.
+/* See LICENSE for license details.*/
 
 #ifndef RISCV_CSR_ENCODING_H
 #define RISCV_CSR_ENCODING_H
@@ -143,16 +143,16 @@
 #define EXT_IO_BASE        0x40000000
 #define DRAM_BASE          0x80000000
 
-// page table entry (PTE) fields
-#define PTE_V     0x001 // Valid
-#define PTE_R     0x002 // Read
-#define PTE_W     0x004 // Write
-#define PTE_X     0x008 // Execute
-#define PTE_U     0x010 // User
-#define PTE_G     0x020 // Global
-#define PTE_A     0x040 // Accessed
-#define PTE_D     0x080 // Dirty
-#define PTE_SOFT  0x300 // Reserved for Software
+/* page table entry (PTE) fields */
+#define PTE_V     0x001 /* Valid */
+#define PTE_R     0x002 /* Read */
+#define PTE_W     0x004 /* Write */
+#define PTE_X     0x008 /* Execute */
+#define PTE_U     0x010 /* User */
+#define PTE_G     0x020 /* Global */
+#define PTE_A     0x040 /* Accessed */
+#define PTE_D     0x080 /* Dirty */
+#define PTE_SOFT  0x300 /* Reserved for Software */
 
 #define PTE_PPN_SHIFT 10
 
@@ -177,56 +177,50 @@
 #ifdef __GNUC__
 
 #define read_fpu(reg) ({ unsigned long __tmp; \
-  __asm__ volatile ("fmv.x.w %0, " #reg : "=r"(__tmp)); \
+  asm volatile ("fmv.x.w %0, " #reg : "=r"(__tmp)); \
   __tmp; })
 
 #define write_fpu(reg, val) ({ \
   if (__builtin_constant_p(val) && (unsigned long)(val) < 32) \
-    __asm__ volatile ("fmv.w.x " #reg ", %0" :: "i"(val)); \
+    asm volatile ("fmv.w.x " #reg ", %0" :: "i"(val)); \
   else \
-    __asm__ volatile ("fmv.w.x " #reg ", %0" :: "r"(val)); })
+    asm volatile ("fmv.w.x " #reg ", %0" :: "r"(val)); })
     
 
 #define read_csr(reg) ({ unsigned long __tmp; \
-  __asm__ volatile ("csrr %0, " #reg : "=r"(__tmp)); \
+  asm volatile ("csrr %0, " #reg : "=r"(__tmp)); \
   __tmp; })
 
 #define write_csr(reg, val) ({ \
   if (__builtin_constant_p(val) && (unsigned long)(val) < 32) \
-    __asm__ volatile ("csrw " #reg ", %0" :: "i"(val)); \
+    asm volatile ("csrw " #reg ", %0" :: "i"(val)); \
   else \
-    __asm__ volatile ("csrw " #reg ", %0" :: "r"(val)); })
+    asm volatile ("csrw " #reg ", %0" :: "r"(val)); })
 
 #define swap_csr(reg, val) ({ unsigned long __tmp; \
   if (__builtin_constant_p(val) && (unsigned long)(val) < 32) \
-    __asm__ volatile ("csrrw %0, " #reg ", %1" : "=r"(__tmp) : "i"(val)); \
+    asm volatile ("csrrw %0, " #reg ", %1" : "=r"(__tmp) : "i"(val)); \
   else \
-    __asm__ volatile ("csrrw %0, " #reg ", %1" : "=r"(__tmp) : "r"(val)); \
+    asm volatile ("csrrw %0, " #reg ", %1" : "=r"(__tmp) : "r"(val)); \
   __tmp; })
 
 #define set_csr(reg, bit) ({ unsigned long __tmp; \
   if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-    __asm__ volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
+    asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
   else \
-    __asm__ volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
+    asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
   __tmp; })
 
 #define clear_csr(reg, bit) ({ unsigned long __tmp; \
   if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-    __asm__ volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
+    asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
   else \
-    __asm__ volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
+    asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
   __tmp; })
 
 #define rdtime() read_csr(time)
 #define rdcycle() read_csr(cycle)
 #define rdinstret() read_csr(instret)
-
-
-
-
-
-
 #endif
 
 #endif

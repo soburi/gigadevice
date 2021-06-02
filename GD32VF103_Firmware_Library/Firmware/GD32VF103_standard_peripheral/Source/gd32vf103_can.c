@@ -1,13 +1,16 @@
 /*!
-    \file  gd32vf103_can.c
-    \brief CAN driver
+    \file    gd32vf103_can.c
+    \brief   CAN driver
     
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2019-11-27, V1.0.1, firmware for GD32VF103
+    \version 2020-07-14, V1.0.2, firmware for GD32VF103
+    \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-14, V1.1.1, firmware for GD32VF103
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -938,7 +941,7 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
 */
 void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 {
-    CAN_REG_VAL(can_periph, flag) |= BIT(CAN_BIT_POS(flag));
+    CAN_REG_VAL(can_periph, flag) = BIT(CAN_BIT_POS(flag));
 }
 
 /*!
@@ -972,9 +975,9 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
     uint32_t ret2 = RESET;
     
     /* get the staus of interrupt flag */
-    if (flag == CAN_INT_FLAG_RFF0) {
+    if (flag == CAN_INT_FLAG_RFL0) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO0);
-    } else if (flag == CAN_INT_FLAG_RFF1) {
+    } else if (flag == CAN_INT_FLAG_RFL1) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO1);
     } else if (flag == CAN_INT_FLAG_ERRN) {
         ret1 = can_error_get(can_periph);
@@ -1011,5 +1014,5 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
 */
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag)
 {
-    CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
+    CAN_REG_VALS(can_periph, flag) = BIT(CAN_BIT_POS0(flag));
 }

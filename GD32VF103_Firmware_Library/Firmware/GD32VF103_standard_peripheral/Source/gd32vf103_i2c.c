@@ -1,13 +1,13 @@
 /*!
-    \file  gd32vf103_i2c.c
-    \brief I2C driver
+    \file    gd32vf103_i2c.c
+    \brief   I2C driver
 
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
-    \version 2019-09-18, V1.0.1, firmware for GD32VF103
+    \version 2020-08-04, V1.1.0, firmware for GD32VF103
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -266,15 +266,15 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr,uint32_t trandirec
 /*!
     \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  addr: the second address in dual-address mode
+    \param[in]  dualaddr: the second address in dual-address mode
     \param[out] none
     \retval     none
 */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr) 
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr) 
 {
     /* configure address */
-    addr = addr & I2C_ADDRESS2_MASK;
-    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | addr);
+    dualaddr = dualaddr & I2C_ADDRESS2_MASK;
+    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | dualaddr);
 }
 
 /*!
@@ -611,11 +611,10 @@ FlagStatus i2c_flag_get(uint32_t i2c_periph, i2c_flag_enum flag)
  */
 void i2c_flag_clear(uint32_t i2c_periph, i2c_flag_enum flag) 
 {
-    uint32_t temp;
     if (I2C_FLAG_ADDSEND == flag) {
         /* read I2C_STAT0 and then read I2C_STAT1 to clear ADDSEND */
-        temp = I2C_STAT0(i2c_periph);
-        temp = I2C_STAT1(i2c_periph);
+        I2C_STAT0(i2c_periph);
+        I2C_STAT1(i2c_periph);
     } else {
         I2C_REG_VAL(i2c_periph, flag) &= ~BIT(I2C_BIT_POS(flag));
     }
@@ -719,11 +718,10 @@ FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph,i2c_interrupt_flag_enum in
  */
 void i2c_interrupt_flag_clear(uint32_t i2c_periph,i2c_interrupt_flag_enum int_flag) 
 {
-    uint32_t temp;
     if (I2C_INT_FLAG_ADDSEND == int_flag) {
         /* read I2C_STAT0 and then read I2C_STAT1 to clear ADDSEND */
-        temp = I2C_STAT0(i2c_periph);
-        temp = I2C_STAT1(i2c_periph);
+        I2C_STAT0(i2c_periph);
+        I2C_STAT1(i2c_periph);
     } else {
         I2C_REG_VAL2(i2c_periph, int_flag) &= ~BIT(I2C_BIT_POS2(int_flag));
     }

@@ -1,13 +1,15 @@
 /*!
-    \file  gd32vf103_fmc.c
-    \brief FMC driver
+    \file    gd32vf103_fmc.c
+    \brief   FMC driver
 
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2019-09-18, V1.0.1, firmware for GD32VF103
+    \version 2020-02-20, V1.0.2, firmware for GD32VF103
+    \version 2020-08-04, V1.1.0, firmware for GD32VF103
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -502,9 +504,9 @@ FlagStatus ob_spc_get(void)
     \param[out] none
     \retval     none
  */
-void fmc_interrupt_enable(uint32_t interrupt)
+void fmc_interrupt_enable(fmc_int_enum interrupt)
 {
-    FMC_REG_VAL(interrupt) |= BIT(FMC_BIT_POS(interrupt));
+    FMC_CTL |= (uint32_t)interrupt;
 }
 
 /*!
@@ -516,89 +518,84 @@ void fmc_interrupt_enable(uint32_t interrupt)
     \param[out] none
     \retval     none
  */
-void fmc_interrupt_disable(uint32_t interrupt)
+void fmc_interrupt_disable(fmc_int_enum interrupt)
 {
-    FMC_REG_VAL(interrupt) &= ~BIT(FMC_BIT_POS(interrupt));
+    FMC_CTL &= ~(uint32_t)interrupt;
 }
 
 /*!
     \brief      check flag is set or not
     \param[in]  flag: check FMC flag
     only one parameter can be selected which is shown as below:
-      \arg        FMC_FLAG_BUSY: FMC busy flag bit
-      \arg        FMC_FLAG_PGERR: FMC operation error flag bit
-      \arg        FMC_FLAG_WPERR: FMC erase/program protection error flag bit
-      \arg        FMC_FLAG_END: FMC end of operation flag bit
-      \arg        FMC_FLAG_OBERR: FMC option byte read error flag bit
+      \arg        FMC_FLAG_BUSY: FMC busy flag
+      \arg        FMC_FLAG_PGERR: FMC operation error flag
+      \arg        FMC_FLAG_WPERR: FMC erase/program protection error flag
+      \arg        FMC_FLAG_END: FMC end of operation flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
  */
-FlagStatus fmc_flag_get(uint32_t flag)
+FlagStatus fmc_flag_get(fmc_flag_enum flag)
 {
-    if(RESET != (FMC_REG_VAL(flag) & BIT(FMC_BIT_POS(flag)))){
-        return SET;
-    } else {
-        return RESET;
+    FlagStatus status = RESET;
+
+    if(FMC_STAT & flag){
+        status = SET;
     }
+    /* return the state of corresponding FMC flag */
+    return status;
 }
 
 /*!
  \brief      clear the FMC flag
  \param[in]  flag: clear FMC flag
  only one parameter can be selected which is shown as below:
- \arg        FMC_FLAG_PGERR: FMC operation error flag bit
- \arg        FMC_FLAG_WPERR: FMC erase/program protection error flag bit
- \arg        FMC_FLAG_END: FMC end of operation flag bit
+ \arg        FMC_FLAG_PGERR: FMC operation error flag
+ \arg        FMC_FLAG_WPERR: FMC erase/program protection error flag
+ \arg        FMC_FLAG_END: FMC end of operation flag
  \param[out] none
  \retval     none
  */
-void fmc_flag_clear(uint32_t flag)
+void fmc_flag_clear(fmc_flag_enum flag)
 {
-    FMC_REG_VAL(flag) = (!FMC_REG_VAL(flag)) | BIT(FMC_BIT_POS(flag));
+    /* clear the flags */
+    FMC_STAT = flag;
 }
 
 /*!
     \brief      get FMC interrupt flag state
     \param[in]  flag: FMC interrupt flags, refer to fmc_interrupt_flag_enum
     only one parameter can be selected which is shown as below:
-      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag bit
-      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag bit
-      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag bit
+      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag
+      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag
+      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
  */
 FlagStatus fmc_interrupt_flag_get(fmc_interrupt_flag_enum flag)
 {
-    FlagStatus ret1 = RESET;
-    FlagStatus ret2 = RESET;
+    FlagStatus status = RESET;
 
-    if(FMC_STAT_REG_OFFSET == FMC_REG_OFFSET_GET(flag)){
-        /* get the staus of interrupt flag */
-        ret1 = (FlagStatus) (FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
-        /* get the staus of interrupt enale bit */
-        ret2 = (FlagStatus) (FMC_CTL & BIT(FMC_BIT_POS1(flag)));
+    if(FMC_STAT & flag){
+        status = SET;
     }
-
-    if(ret1 && ret2){
-        return SET;
-    }else{
-        return RESET;
-    }
+    /* return the state of corresponding FMC flag */
+    return status;
 }
 
 /*!
     \brief      clear FMC interrupt flag state
     \param[in]  flag: FMC interrupt flags, refer to can_interrupt_flag_enum
     only one parameter can be selected which is shown as below:
-      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag bit
-      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag bit
-      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag bit
+      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag
+      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag
+      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag
      \param[out] none
      \retval     none
  */
 void fmc_interrupt_flag_clear(fmc_interrupt_flag_enum flag)
 {
-    FMC_REG_VALS(flag) |= BIT(FMC_BIT_POS0(flag));
+    /* clear the flags */
+    FMC_STAT = flag;
 }
 
 /*!
