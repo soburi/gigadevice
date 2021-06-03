@@ -48,7 +48,7 @@ OF SUCH DAMAGE.
 void eclic_global_interrupt_enable(void)
 {
     /* set machine interrupt enable bit */
-    set_csr(mstatus, MSTATUS_MIE);
+    __RV_CSR_SET(mstatus, MSTATUS_MIE);
 }
 
 /*!
@@ -60,7 +60,7 @@ void eclic_global_interrupt_enable(void)
 void eclic_global_interrupt_disable(void)
 {
     /* clear machine interrupt enable bit */
-    clear_csr(mstatus, MSTATUS_MIE);
+    __RV_CSR_CLEAR(mstatus, MSTATUS_MIE);
 }
 
 /*!
@@ -125,5 +125,5 @@ void eclic_system_reset(void)
 */
 void eclic_send_event(void)
 {
-    set_csr(0x812U, 0x1U);
+    __RV_CSR_SET(0x812U, 0x1U);
 }

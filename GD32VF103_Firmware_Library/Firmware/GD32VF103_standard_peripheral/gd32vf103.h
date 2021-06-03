@@ -93,7 +93,10 @@ OF SUCH DAMAGE.
 #define LXTAL_VALUE  ((uint32_t)32768)
 #endif /* low speed crystal oscillator value */
 
-/* define interrupt number */
+/* =========================================================================================================================== */
+/* ================                                Interrupt Number Definition                                ================ */
+/* =========================================================================================================================== */
+
 typedef enum IRQn
 {
 
@@ -102,7 +105,32 @@ typedef enum IRQn
     CLIC_INT_TMR                 = 7,       /*!< CPU Timer interrupt                                    */
     CLIC_INT_BWEI                = 17,      /*!< Bus Error interrupt                                    */
     CLIC_INT_PMOVI               = 18,      /*!< Performance Monitor                                    */
+    /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
 
+    Reserved0_IRQn            =   0,              /*!<  Internal reserved */
+    Reserved1_IRQn            =   1,              /*!<  Internal reserved */
+    Reserved2_IRQn            =   2,              /*!<  Internal reserved */
+    SysTimerSW_IRQn           =   3,              /*!<  System Timer SW interrupt */
+    Reserved3_IRQn            =   4,              /*!<  Internal reserved */
+    Reserved4_IRQn            =   5,              /*!<  Internal reserved */
+    Reserved5_IRQn            =   6,              /*!<  Internal reserved */
+    SysTimer_IRQn             =   7,              /*!<  System Timer Interrupt */
+    Reserved6_IRQn            =   8,              /*!<  Internal reserved */
+    Reserved7_IRQn            =   9,              /*!<  Internal reserved */
+    Reserved8_IRQn            =  10,              /*!<  Internal reserved */
+    Reserved9_IRQn            =  11,              /*!<  Internal reserved */
+    Reserved10_IRQn           =  12,              /*!<  Internal reserved */
+    Reserved11_IRQn           =  13,              /*!<  Internal reserved */
+    Reserved12_IRQn           =  14,              /*!<  Internal reserved */
+    Reserved13_IRQn           =  15,              /*!<  Internal reserved */
+    Reserved14_IRQn           =  16,              /*!<  Internal reserved */
+    BusError_IRQn             =  17,              /*!<  Bus Error interrupt */
+    PerfMon_IRQn              =  18,              /*!<  Performance Monitor */
+
+    /* ===========================================  GD32VF103 Specific Interrupt Numbers  ========================================= */
+    /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
+             could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
+             eg.: Interrupt for Timer#1       TIM1_IRQHandler   ->   TIM1_IRQn */
     /* interruput numbers */
     WWDGT_IRQn                   = 19,      /*!< window watchDog timer interrupt                         */
     LVD_IRQn                     = 20,      /*!< LVD through EXTI line detect interrupt                  */
@@ -171,8 +199,83 @@ typedef enum IRQn
     ECLIC_NUM_INTERRUPTS
 } IRQn_Type;
 
-/* includes */
-#include "system_gd32vf103.h"
+/* =========================================================================================================================== */
+/* ================                                  Exception Code Definition                                ================ */
+/* =========================================================================================================================== */
+
+typedef enum EXCn {
+    /* =======================================  Nuclei N/NX Specific Exception Code  ======================================== */
+    InsUnalign_EXCn          =   0,              /*!<  Instruction address misaligned */
+    InsAccFault_EXCn         =   1,              /*!<  Instruction access fault */
+    IlleIns_EXCn             =   2,              /*!<  Illegal instruction */
+    Break_EXCn               =   3,              /*!<  Beakpoint */
+    LdAddrUnalign_EXCn       =   4,              /*!<  Load address misaligned */
+    LdFault_EXCn             =   5,              /*!<  Load access fault */
+    StAddrUnalign_EXCn       =   6,              /*!<  Store or AMO address misaligned */
+    StAccessFault_EXCn       =   7,              /*!<  Store or AMO access fault */
+    UmodeEcall_EXCn          =   8,              /*!<  Environment call from User mode */
+    MmodeEcall_EXCn          =  11,              /*!<  Environment call from Machine mode */
+    NMI_EXCn                 = 0xfff,            /*!<  NMI interrupt*/
+} EXCn_Type;
+
+/* =========================================================================================================================== */
+/* ================                           Processor and Core Peripheral Section                           ================ */
+/* =========================================================================================================================== */
+
+/* ToDo: set the defines according your Device */
+/* ToDo: define the correct core revision */
+#define __NUCLEI_N_REV            0x0100    /*!< Core Revision r1p0 */
+
+/* ToDo: define the correct core features for the nuclei_soc */
+#define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
+#define __ECLIC_BASEADDR          0xD2000000UL          /*!< Set to ECLIC baseaddr of your device */
+
+#define __ECLIC_INTCTLBITS        4                     /*!< Set to 1 - 8, the number of hardware bits are actually implemented in the clicintctl registers. */
+#define __ECLIC_INTNUM            86                    /*!< Set to 1 - 1005, the external interrupt number of ECLIC Unit */
+#define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
+#define __SYSTIMER_BASEADDR       0xD1000000UL          /*!< Set to SysTimer baseaddr of your device */
+
+/*!< Set to 0, 1, or 2, 0 not present, 1 single floating point unit present, 2 double floating point unit present */
+#define __FPU_PRESENT             0
+
+#define __DSP_PRESENT             0                     /*!< Set to 1 if DSP is present */
+#define __PMP_PRESENT             1                     /*!< Set to 1 if PMP is present */
+#define __PMP_ENTRY_NUM           8                     /*!< Set to 8 or 16, the number of PMP entries */
+#define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
+#define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
+#define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
+#define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */
+
+/** @} */ /* End of group Configuration_of_CMSIS */
+
+
+
+#include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
+/* ToDo: include your system_nuclei_soc.h file
+         replace 'Device' with your device name */
+#include "system_gd32vf103.h"                    /*!< gd32vf103 System */
+
+
+/* ========================================  Start of section using anonymous unions  ======================================== */
+#if   defined (__GNUC__)
+/* anonymous unions are enabled by default */
+#else
+#warning Not supported compiler type
+#endif
+
+
+/* system frequency define */
+#define __IRC8M           (IRC8M_VALUE)            /* internal 8 MHz RC oscillator frequency */
+#define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
+#define __SYS_OSC_CLK     (__IRC8M)                /* main oscillator frequency */
+
+#define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
+
+
+#define RTC_FREQ LXTAL_VALUE
+// The TIMER frequency is just the RTC frequency
+#define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock/4)  //LXTAL_VALUE units HZ
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -238,6 +341,18 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #ifdef USE_STDPERIPH_DRIVER
 #include "gd32vf103_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
+
+// Interrupt Numbers
+#define SOC_ECLIC_NUM_INTERRUPTS    86
+#define SOC_ECLIC_INT_GPIO_BASE     19
+
+
+// Interrupt Handler Definitions
+#define SOC_MTIMER_HANDLER          eclic_mtip_handler
+#define SOC_SOFTINT_HANDLER         eclic_msip_handler
+
+#define NUM_GPIO 32
+
 
 #ifdef cplusplus
 }
