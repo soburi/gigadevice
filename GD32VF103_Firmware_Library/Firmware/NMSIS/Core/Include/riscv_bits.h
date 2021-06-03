@@ -83,7 +83,9 @@
 #define STR(x)                  XSTR(x)
 #define XSTR(x)                 #x
 #define __STR(s)                #s
+#ifndef STRINGIFY
 #define STRINGIFY(s)            __STR(s)
+#endif
 
 #ifdef __cplusplus
 }
