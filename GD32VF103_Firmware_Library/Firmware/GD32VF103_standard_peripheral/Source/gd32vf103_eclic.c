@@ -76,7 +76,7 @@ void eclic_global_interrupt_disable(void)
 */
 void eclic_priority_group_set(uint8_t prigroup)
 {
-    eclic_set_nlbits(prigroup);
+    __ECLIC_SetCfgNlbits(prigroup);
 }
 
 /*!
@@ -89,9 +89,9 @@ void eclic_priority_group_set(uint8_t prigroup)
 */
 void eclic_irq_enable(uint32_t source, uint8_t level, uint8_t priority)
 {
-    eclic_enable_interrupt(source);
-    eclic_set_irq_lvl_abs(source, level);
-    eclic_set_irq_priority(source, priority);
+    ECLIC->CTRL[source].INTIE = 1;
+    ECLIC_SetLevelIRQ(source, level);
+    ECLIC_SetPriorityIRQ(source, priority);
 }
 
 /*!
@@ -102,7 +102,7 @@ void eclic_irq_enable(uint32_t source, uint8_t level, uint8_t priority)
 */
 void eclic_irq_disable(uint32_t source)
 {
-    eclic_disable_interrupt(source);
+    ECLIC->CTRL[source].INTIE = 0;
 }
 
 /*!

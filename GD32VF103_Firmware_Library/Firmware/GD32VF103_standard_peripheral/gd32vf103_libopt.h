@@ -35,6 +35,7 @@ OF SUCH DAMAGE.
 #ifndef GD32VF103_LIBOPT_H
 #define GD32VF103_LIBOPT_H
 
+#include "nmsis_core.h"
 #include "gd32vf103_adc.h"
 #include "gd32vf103_bkp.h"
 #include "gd32vf103_can.h"
@@ -56,7 +57,5 @@ OF SUCH DAMAGE.
 #include "gd32vf103_timer.h"
 #include "gd32vf103_usart.h"
 #include "gd32vf103_wwdgt.h"
-#include "nmsis_gcc.h"
-#include "core_feature_eclic.h"
 
 #endif /* GD32VF103_LIBOPT_H */
