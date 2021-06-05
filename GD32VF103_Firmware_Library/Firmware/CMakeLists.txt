@@ -5,7 +5,6 @@ zephyr_include_directories(GD32VF103_standard_peripheral/Include)
 zephyr_include_directories(NMSIS/Core/Include)
 
 zephyr_compile_definitions(HXTAL_VALUE=8000000U)
-zephyr_compile_definitions(__ECLIC_PRESENT=1)
 
 zephyr_sources(GD32VF103_standard_peripheral/Source/gd32vf103_adc.c)
 zephyr_sources(GD32VF103_standard_peripheral/Source/gd32vf103_bkp.c)
