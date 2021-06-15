@@ -2,6 +2,7 @@
 
 zephyr_include_directories(GD32VF103_standard_peripheral/)
 zephyr_include_directories(GD32VF103_standard_peripheral/Include)
+zephyr_include_directories(RISCV/drivers)
 
 zephyr_compile_definitions(HXTAL_VALUE=8000000U)
 
@@ -27,3 +28,4 @@ zephyr_sources(GD32VF103_standard_peripheral/Source/gd32vf103_timer.c)
 zephyr_sources(GD32VF103_standard_peripheral/Source/gd32vf103_usart.c)
 zephyr_sources(GD32VF103_standard_peripheral/Source/gd32vf103_wwdgt.c)
 zephyr_sources(GD32VF103_standard_peripheral/system_gd32vf103.c)
+zephyr_sources(RISCV/drivers/n200_func.c)

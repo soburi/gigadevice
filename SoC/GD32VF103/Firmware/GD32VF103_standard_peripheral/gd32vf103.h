@@ -177,7 +177,7 @@ typedef enum IRQn
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
+//typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 
@@ -185,7 +185,9 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #define REG32(addr)                  (*(volatile uint32_t *)(uint32_t)(addr))
 #define REG16(addr)                  (*(volatile uint16_t *)(uint32_t)(addr))
 #define REG8(addr)                   (*(volatile uint8_t *)(uint32_t)(addr))
+#ifndef BIT
 #define BIT(x)                       ((uint32_t)((uint32_t)0x01U<<(x)))
+#endif
 #define BITS(start, end)             ((0xFFFFFFFFUL << (start)) & (0xFFFFFFFFUL >> (31U - (uint32_t)(end)))) 
 #define GET_BITS(regval, start, end) (((regval) & BITS((start),(end))) >> (start))
 
@@ -227,19 +229,6 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #define FMC_BASE              (AHB1_BUS_BASE + 0x0000A000U)  /*!< FMC base address                 */
 #define CRC_BASE              (AHB1_BUS_BASE + 0x0000B000U)  /*!< CRC base address                 */
 #define USBFS_BASE            (AHB1_BUS_BASE + 0x0FFE8000U)  /*!< USBFS base address               */
-
-#define __ECLIC_PRESENT       1
-#define __SYSTIMER_PRESENT    1
-#define __PMP_PRESENT         1
-#define __DSP_PRESENT         0
-#define __FPU_PRESENT         0
-#define __DCACHE_PRESENT      0
-#define __ICACHE_PRESENT      0
-
-#define __SYSTIMER_BASEADDR   ((uint32_t)0xd1000000U)
-#define __ECLIC_BASEADDR      ((uint32_t)0xd2000000U)
-
-#define __PMP_ENTRY_NUM       16
 
 /* define marco USE_STDPERIPH_DRIVER */
 #if !defined  USE_STDPERIPH_DRIVER
